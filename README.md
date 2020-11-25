@@ -16,7 +16,7 @@
 
 [`iciba_word`](https://github.com/StephanoGeorge/iciba-API)
 
-Linux: `xclip`
+Linux: `xclip`, `notify-send.py`
 
 Windows: `keyboard`, `pyperclip`, `win10toast`
 
