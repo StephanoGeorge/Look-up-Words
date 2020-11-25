@@ -50,17 +50,18 @@ def look_up():
     means = replace('\n'.join(
         [f"{part['part']}: {','.join(part['means'])}" for part in word['symbols'][0]['parts']]
     )) if word.has_word else ''
-    word.pronounce(speak=True)
     if p == 'Linux':
         if word.has_word:
             run(shlex.split(f"notify-send.py --expire-time {args.expire_time * 1000} '{word_name}' "
                             f"'{pronunciation}\n{means}'"), stdout=DEVNULL)
+            word.pronounce(speak=True)
         else:
             run(shlex.split(f"notify-send.py --expire-time {no_such_word_expire_time * 1000} "
                             f"'{word_name}' ''"), stdout=DEVNULL)
     else:
         if word.has_word:
             toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time)
+            word.pronounce(speak=True)
         else:
             toaster.show_toast(word_name, '', duration=no_such_word_expire_time)
 
