@@ -1,4 +1,4 @@
-# Look up Words by Hot Key (快捷键查词)
+# Look up Words (查词)
 
 # Features
 
