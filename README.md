@@ -8,6 +8,8 @@
 
 - For Windows, registers global hot key to call looking up words, for Linux, please use system setting.
 
+- Sends notification to show the result.
+
 - Speaks the words.
 
 # Dependencies
