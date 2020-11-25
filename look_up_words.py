@@ -1,7 +1,6 @@
 import argparse
 import platform
-import shlex
-from subprocess import run, DEVNULL
+from subprocess import run, Popen, DEVNULL
 
 from iciba_word import Word
 
@@ -38,7 +37,7 @@ def replace(s: str):
 
 def look_up():
     if p == 'Linux':
-        word_str = run(shlex.split('xclip -selection primary -o'), capture_output=True).stdout.decode()
+        word_str = run(['xclip', '-selection', 'primary', '-o'], capture_output=True).stdout.decode()
     else:
         keyboard.send('ctrl+c')
         word_str = pyperclip.paste()
@@ -52,12 +51,12 @@ def look_up():
     )) if word.has_word else ''
     if p == 'Linux':
         if word.has_word:
-            run(shlex.split(f"notify-send.py --expire-time {args.expire_time * 1000} '{word_name}' "
-                            f"'{pronunciation}\n{means}'"), stdout=DEVNULL)
+            Popen(['notify-send.py', '--expire-time', f'{args.expire_time * 1000}', f'{word_name}',
+                   f'{pronunciation}\n{means}'], stdout=DEVNULL)
             word.pronounce(speak=True)
         else:
-            run(shlex.split(f"notify-send.py --expire-time {no_such_word_expire_time * 1000} "
-                            f"'{word_name}' ''"), stdout=DEVNULL)
+            Popen(['notify-send.py', '--expire-time', f'{no_such_word_expire_time * 1000}', f'{word_name}', ''],
+                  stdout=DEVNULL)
     else:
         if word.has_word:
             toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time)
