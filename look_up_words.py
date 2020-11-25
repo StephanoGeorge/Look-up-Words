@@ -41,6 +41,7 @@ def look_up():
     else:
         keyboard.send('ctrl+c')
         word_str = pyperclip.paste()
+    word_str = word_str.lower()
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
     word = Word(word_str)
