@@ -63,7 +63,7 @@ def look_up():
             toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time, threaded=True)
             word.pronounce(speak=True)
         else:
-            toaster.show_toast(word_name, '', duration=no_such_word_expire_time)
+            toaster.show_toast(word_name, '', duration=no_such_word_expire_time, threaded=True)
 
 
 if p == 'Windows':
