@@ -60,7 +60,7 @@ def look_up():
                   stdout=DEVNULL)
     else:
         if word.has_word:
-            toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time)
+            toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time, threaded=True)
             word.pronounce(speak=True)
         else:
             toaster.show_toast(word_name, '', duration=no_such_word_expire_time)
