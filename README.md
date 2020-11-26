@@ -14,7 +14,7 @@
 
 # Dependencies
 
-[`iciba_word`](https://github.com/StephanoGeorge/iciba-API)
+[`iciba_word`](https://github.com/StephanoGeorge/iciba-API), `ffmpeg`
 
 Linux: `xclip`, `notify-send.py`
 
