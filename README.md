@@ -14,11 +14,11 @@
 
 # Dependencies
 
-[`iciba_word`](https://github.com/StephanoGeorge/iciba-API), `ffmpeg`
+[`iciba_word`](https://github.com/StephanoGeorge/iciba-API) package, `ffmpeg` command
 
-Linux: `xclip`, `notify-send.py`
+Linux: `xclip` command, `notify-send.py` command
 
-Windows: `keyboard`, `pyperclip`, `win10toast`
+Windows: `keyboard` package, `pyperclip` package, `win10toast` package
 
 # Getting Started
 
