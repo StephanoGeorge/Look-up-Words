@@ -41,7 +41,6 @@ def look_up():
     else:
         keyboard.send('ctrl+c')
         word_str = pyperclip.paste()
-    word_str = word_str.lower()  # Or iciba can not recognize
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
     word = WordYouDao(word_str)
