@@ -1,8 +1,9 @@
 import argparse
 import platform
+import threading
 from subprocess import run, Popen, DEVNULL
 
-from iciba_word import Word
+from web_chi_dict import WordICiBa, WordYouDao
 
 p = platform.system()
 no_such_word_expire_time = 3
@@ -11,8 +12,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--hot-key', default='windows+c',
                     help='Hot key to call looking up words, only for Windows, for Linux, please use system setting')
 parser.add_argument('--expire-time', default=20, help='Expire time of the notification in second')
-parser.add_argument('--pronunciation-type', default='am',
-                    help="'am' for American, 'en' for English, 'tts' for Text-to-Speak")
+parser.add_argument('--types', default=['us', 'uk', 'tts'], action='extend',
+                    help="List of pronunciation types, 'us' for USA, 'uk' for UK, 'tts' for Text-to-Speak")
 args = parser.parse_args()
 
 if p == 'Linux':
@@ -44,26 +45,40 @@ def look_up():
     word_str = word_str.lower()  # Or iciba can not recognize
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
-    word = Word(word_str)
-    word_name = word['word_name'] if word.has_word else f'No such word: {word_str}'
-    pronunciation = word['symbols'][0][f'ph_{args.pronunciation_type}'] if word.has_word else ''
-    means = replace('\n'.join(
-        [f"{part['part']}: {','.join(part['means'])}" for part in word['symbols'][0]['parts']]
-    )) if word.has_word else ''
-    if p == 'Linux':
-        if word.has_word:
-            Popen(['notify-send.py', '--expire-time', f'{args.expire_time * 1000}', f'{word_name}',
-                   f'{pronunciation}\n{means}'], stdout=DEVNULL)
-            word.pronounce(speak=True)
-        else:
-            Popen(['notify-send.py', '--expire-time', f'{no_such_word_expire_time * 1000}', f'{word_name}', ''],
-                  stdout=DEVNULL)
+    event = threading.Event()
+    word_youdao: WordYouDao
+
+    def get_word_youdao():
+        nonlocal word_youdao
+        word_youdao = WordYouDao(word_str)
+        event.set()
+
+    threading.Thread(target=get_word_youdao).start()
+    word_iciba = WordICiBa(word_str)
+    if word_iciba.has_word:
+        word = word_iciba
+        word_name = word['word_name']
+        means = replace('\n'.join(
+            [f"{part['part']} {','.join(part['means'])}" for part in word['symbols'][0]['parts']]
+        ))
     else:
-        if word.has_word:
-            toaster.show_toast(word_name, f'{pronunciation}\n{means}', duration=args.expire_time, threaded=True)
-            word.pronounce(speak=True)
+        event.wait()
+        word = word_youdao
+        word_name = word['query']
+        if 'basic' in word.json:
+            means = replace('\n'.join(word['basic']['explains']))
+        elif 'web' in word.json:
+            means = replace('\n'.join(word['web'][0]['value']))
         else:
-            toaster.show_toast(word_name, '', duration=no_such_word_expire_time, threaded=True)
+            means = replace('\n'.join(word['translation']))
+    pronunciation = word.get_pronunciation(args.types)
+    content = f'{pronunciation}\n{means}'
+    if p == 'Linux':
+        Popen(['notify-send.py', '--expire-time', f'{args.expire_time * 1000}', f'{word_name}', content],
+              stdout=DEVNULL)
+    else:
+        toaster.show_toast(word_name, content, duration=args.expire_time, threaded=True)
+    word.speak(args.types)
 
 
 if p == 'Windows':
