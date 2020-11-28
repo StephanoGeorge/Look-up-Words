@@ -1,9 +1,8 @@
 import argparse
 import platform
-import threading
 from subprocess import run, Popen, DEVNULL
 
-from web_chi_dict import WordICiBa, WordYouDao
+from web_chi_dict import WordYouDao
 
 p = platform.system()
 no_such_word_expire_time = 3
@@ -45,32 +44,14 @@ def look_up():
     word_str = word_str.lower()  # Or iciba can not recognize
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
-    event = threading.Event()
-    word_youdao: WordYouDao
-
-    def get_word_youdao():
-        nonlocal word_youdao
-        word_youdao = WordYouDao(word_str)
-        event.set()
-
-    threading.Thread(target=get_word_youdao).start()
-    word_iciba = WordICiBa(word_str)
-    if word_iciba.has_word:
-        word = word_iciba
-        word_name = word['word_name']
-        means = replace('\n'.join(
-            [f"{part['part']} {','.join(part['means'])}" for part in word['symbols'][0]['parts']]
-        ))
+    word = WordYouDao(word_str)
+    word_name = word['query']
+    if 'basic' in word.json:
+        means = replace('\n'.join(word['basic']['explains']))
+    elif 'web' in word.json:
+        means = replace('\n'.join(word['web'][0]['value']))
     else:
-        event.wait()
-        word = word_youdao
-        word_name = word['query']
-        if 'basic' in word.json:
-            means = replace('\n'.join(word['basic']['explains']))
-        elif 'web' in word.json:
-            means = replace('\n'.join(word['web'][0]['value']))
-        else:
-            means = replace('\n'.join(word['translation']))
+        means = replace('\n'.join(word['translation']))
     pronunciation = word.get_pronunciation(args.types)
     content = f'{pronunciation}\n{means}'
     if p == 'Linux':
