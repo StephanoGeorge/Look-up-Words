@@ -1,5 +1,6 @@
 import argparse
 import platform
+import re
 from subprocess import run, Popen, DEVNULL
 
 from web_chi_dict import WordYouDao
@@ -10,7 +11,6 @@ no_such_word_expire_time = 3
 parser = argparse.ArgumentParser()
 parser.add_argument('--hot-key', default='windows+c',
                     help='Hot key to call looking up words, only for Windows, for Linux, please use system setting')
-parser.add_argument('--expire-time', default=20, help='Expire time of the notification in second')
 parser.add_argument('--types', default=['us', 'uk', 'tts'], action='extend',
                     help="List of pronunciation types, 'us' for USA, 'uk' for UK, 'tts' for Text-to-Speak")
 args = parser.parse_args()
@@ -54,11 +54,12 @@ def look_up():
         means = replace('\n'.join(word['translation']))
     pronunciation = word.get_pronunciation(args.types)
     content = f'{pronunciation}\n{means}'
+    expire_time = max(len(re.findall(r'[\u4e00-\u9fa5]', content)) // 2, 2)
     if p == 'Linux':
-        Popen(['notify-send.py', '--expire-time', f'{args.expire_time * 1000}', f'{word_name}', content],
+        Popen(['notify-send.py', '--expire-time', f'{expire_time * 1000}', f'{word_name}', content],
               stdout=DEVNULL)
     else:
-        toaster.show_toast(word_name, content, duration=args.expire_time, threaded=True)
+        toaster.show_toast(word_name, content, duration=expire_time, threaded=True)
     word.speak(args.types)
 
 
