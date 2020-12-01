@@ -3,6 +3,7 @@ import platform
 import re
 from subprocess import run, Popen, DEVNULL
 
+import time
 from web_chi_dict import WordYouDao
 
 p = platform.system()
@@ -40,6 +41,7 @@ def look_up():
         word_str = run(['xclip', '-selection', 'primary', '-o'], capture_output=True).stdout.decode()
     else:
         keyboard.send('ctrl+c')
+        time.sleep(0.1)  # Or can not get the least copied word
         word_str = pyperclip.paste()
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
@@ -63,7 +65,7 @@ def look_up():
 
 
 if p == 'Windows':
-    keyboard.add_hotkey(args.hot_key, look_up, trigger_on_release=True)
+    keyboard.add_hotkey(args.hot_key, look_up, suppress=True)
     keyboard.wait()
 else:
     look_up()
