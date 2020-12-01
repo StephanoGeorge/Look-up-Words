@@ -63,7 +63,7 @@ def look_up():
 
 
 if p == 'Windows':
-    keyboard.add_hotkey(args.hot_key, look_up)
+    keyboard.add_hotkey(args.hot_key, look_up, trigger_on_release=True)
     keyboard.wait()
 else:
     look_up()
