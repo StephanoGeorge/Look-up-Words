@@ -7,7 +7,6 @@ import time
 from web_chi_dict import WordYouDao
 
 p = platform.system()
-no_such_word_expire_time = 3
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--hot-key', default='windows+c',
@@ -47,12 +46,15 @@ def look_up():
     word_str = word_str.strip()
     word = WordYouDao(word_str)
     word_name = word['query']
-    if 'basic' in word.json:
-        means = replace('\n'.join(word['basic']['explains']))
-    elif 'web' in word.json:
-        means = replace('\n'.join(word['web'][0]['value']))
+    if word.has_word:
+        if 'basic' in word.json:
+            means = replace('\n'.join(word['basic']['explains']))
+        elif 'web' in word.json:
+            means = replace('\n'.join(word['web'][0]['value']))
+        else:
+            means = replace('\n'.join(word['translation']))
     else:
-        means = replace('\n'.join(word['translation']))
+        means = 'No Such Word'
     pronunciation = word.get_pronunciation(args.types)
     content = f'{pronunciation}\n{means}'
     expire_time = max(len(re.findall(r'[\u4e00-\u9fa5]', content)) // 2, 2)
