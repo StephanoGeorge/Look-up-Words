@@ -16,7 +16,7 @@
 
 [`web_chi_dict`](https://github.com/StephanoGeorge/Web-Chi-Dict-SDK) package, `ffmpeg` command
 
-Linux: `xclip` command, `notify-send.py` command
+Linux: `xclip` command, `notify-send` command
 
 Windows: `keyboard` package, `pyperclip` package, `win10toast` package
 

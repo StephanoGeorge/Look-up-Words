@@ -59,7 +59,7 @@ def look_up():
     content = f'{pronunciation}\n{means}'
     expire_time = max(len(re.findall(r'[\u4e00-\u9fa5]', content)) // 2, 2)
     if p == 'Linux':
-        Popen(['notify-send.py', '--expire-time', f'{expire_time * 1000}', f'{word_name}', content],
+        Popen(['notify-send', '--expire-time', f'{expire_time * 1000}', f'{word_name}', content],
               stdout=DEVNULL)
     else:
         toaster.show_toast(word_name, content, duration=expire_time, threaded=True)
