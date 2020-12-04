@@ -26,4 +26,4 @@ See `python3 look_up_words.py -h`
 
 # Details
 
-Use iciba.com API
+Use youdao.com API
