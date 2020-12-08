@@ -4,6 +4,7 @@ import re
 from subprocess import run, Popen, DEVNULL
 
 import time
+from math import sqrt
 from web_chi_dict import WordYouDao
 
 p = platform.system()
@@ -57,7 +58,8 @@ def look_up():
         means = 'No Such Word'
     pronunciation = word.get_pronunciation(args.types)
     content = f'{pronunciation}\n{means}'
-    expire_time = max(len(re.findall(r'[\u4e00-\u9fa5]', content)) // 2, 2)
+    content_length = len(re.findall(r'[\u4e00-\u9fa5]', content))
+    expire_time = int(sqrt(content_length)) + 2
     if p == 'Linux':
         Popen(['notify-send', '--expire-time', f'{expire_time * 1000}', f'{word_name}', content],
               stdout=DEVNULL)
