@@ -11,8 +11,12 @@ p = platform.system()
 parser = argparse.ArgumentParser()
 parser.add_argument('--hot-key', default='windows+c',
                     help='Hot key to call looking up words, only for Windows, for Linux, please use system setting')
-parser.add_argument('--types', default=['us', 'uk', 'tts'], action='extend',
-                    help="List of pronunciation types, 'us' for USA, 'uk' for UK, 'tts' for Text-to-Speak")
+if int(platform.python_version_tuple()[1]) >= 8:
+    parser.add_argument('--types', default=['us', 'uk', 'tts'], action='extend',
+                        help="List of pronunciation types, 'us' for USA, 'uk' for UK, 'tts' for Text-to-Speak")
+else:
+    parser.add_argument('--types', default=['us', 'uk', 'tts'], action='append',
+                        help="List of pronunciation types, 'us' for USA, 'uk' for UK, 'tts' for Text-to-Speak")
 args = parser.parse_args()
 
 if p == 'Linux':
