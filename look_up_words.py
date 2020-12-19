@@ -3,7 +3,6 @@ import platform
 import re
 from subprocess import run, Popen, DEVNULL
 
-import time
 from math import sqrt
 from web_chi_dict import WordYouDao
 
@@ -40,8 +39,8 @@ def look_up():
     if p == 'Linux':
         word_str = run(['xclip', '-selection', 'primary', '-o'], capture_output=True).stdout.decode()
     else:
-        keyboard.send('ctrl+c')
-        time.sleep(0.1)  # Or can not get the least copied word
+        # keyboard.send('ctrl+c')
+        # time.sleep(0.1)  # Or can not get the least copied word
         word_str = pyperclip.paste()
     # word = re.sub(r'[^a-zA-Z0-9]', '', word)
     word_str = word_str.strip()
@@ -69,7 +68,7 @@ def look_up():
 
 
 if p == 'Windows':
-    keyboard.add_hotkey(args.hot_key, look_up, suppress=True)
+    keyboard.add_hotkey(args.hot_key, look_up)
     keyboard.wait()
 else:
     look_up()

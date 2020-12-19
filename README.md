@@ -4,7 +4,7 @@
 
 - Platforms: Linux, Windows.
 
-- Reads selected text as the word.
+- For Linux, reads selected text as the word, for Windows, reads clipboard as the word.
 
 - For Windows, registers global hot key to call looking up words, for Linux, please use system setting.
 
@@ -22,7 +22,7 @@ Windows: `keyboard` package, `pyperclip` package, `win10toast` package
 
 # Getting Started
 
-See `python3 look_up_words.py -h`
+See `README.md` and `python3 look_up_words.py -h`
 
 # Details
 
