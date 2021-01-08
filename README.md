@@ -14,7 +14,7 @@
 
 # Dependencies
 
-[`web_chi_dict`](https://github.com/StephanoGeorge/Web-Chi-Dict-SDK) package, `ffmpeg` command
+[`web_chi_dict`](https://github.com/StephanoGeorge/Web-Chi-Dict) package, `ffmpeg` command
 
 Linux: `xclip` command, `notify-send` command
 
