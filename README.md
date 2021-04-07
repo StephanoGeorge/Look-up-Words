@@ -3,14 +3,12 @@
 # Features
 
 - Platforms: Linux, Windows.
-
 - For Linux, reads selected text as the word, for Windows, reads clipboard as the word.
-
 - For Windows, registers global hot key to call looking up words, for Linux, please use system setting.
-
 - Sends notification to show the result.
-
 - Speaks the words.
+
+![example.png](example.png)
 
 # Dependencies
 
